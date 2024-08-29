@@ -1,5 +1,5 @@
 import { View, SafeAreaView, Text, StyleSheet, Alert } from "react-native";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Title from "@/components/ui/Title";
 import NumberContainer from "@/components/game/numberContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
@@ -17,8 +17,11 @@ function generateRandomNumber(min: number, max: number, exclude: number) {
 }
 
 interface GameScreenProps {
-  chosenNumber: number;
+  chosenNumber: number | null;
+  guessRounds: number[];
   setGameOver: (gameOver: boolean) => void;
+  incrementNumberOfRounds: () => void;
+  updateGuessRounds: (newGuess: number) => void;
 }
 
 let minBoundary = 1;
@@ -26,9 +29,13 @@ let maxBoundary = 100;
 
 export default function GameScreen({
   chosenNumber,
+  guessRounds,
   setGameOver,
+  incrementNumberOfRounds,
+  updateGuessRounds,
 }: GameScreenProps) {
-  const initialGuess = generateRandomNumber(1, 100, chosenNumber);
+  const initialGuess =
+    chosenNumber && generateRandomNumber(1, 100, chosenNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
 
   useEffect(() => {
@@ -37,10 +44,21 @@ export default function GameScreen({
     }
   }, [currentGuess, chosenNumber]);
 
+  useEffect(() => {
+    minBoundary = 1;
+    maxBoundary = 100;
+  }, []);
+
   const handleGuess = (direction: string) => {
     if (
-      (direction === "lower" && currentGuess < chosenNumber) ||
-      (direction === "higher" && currentGuess > chosenNumber)
+      (direction === "lower" &&
+        chosenNumber &&
+        currentGuess &&
+        currentGuess < chosenNumber) ||
+      (direction === "higher" &&
+        chosenNumber &&
+        currentGuess &&
+        currentGuess > chosenNumber)
     ) {
       Alert.alert("Don't lie", "You know that this is wrong", [
         { text: "sorry", style: "cancel" },
@@ -48,17 +66,20 @@ export default function GameScreen({
       return;
     }
     if (direction === "higher") {
-      minBoundary = currentGuess + 1;
+      minBoundary = currentGuess! + 1;
     } else if (direction === "lower") {
-      maxBoundary = currentGuess;
+      maxBoundary = currentGuess!;
     }
-    const newGuess = generateRandomNumber(
-      minBoundary,
-      maxBoundary,
-      chosenNumber
-    );
+    const newGuess =
+      chosenNumber &&
+      generateRandomNumber(minBoundary, maxBoundary, chosenNumber);
     setCurrentGuess(newGuess);
+    incrementNumberOfRounds();
+    updateGuessRounds(newGuess!);
   };
+
+  console.log("minBoudary ---> ", minBoundary);
+  console.log("maxBoudary ---> ", maxBoundary);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,7 +105,10 @@ export default function GameScreen({
           </View>
         </View>
       </Card>
-      {/* <View>LOG ROUNDS</View> */}
+      <View>
+        {guessRounds.length > 0 &&
+          guessRounds.map((round) => <Text key={round}>{round}</Text>)}
+      </View>
     </SafeAreaView>
   );
 }

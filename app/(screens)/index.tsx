@@ -14,8 +14,10 @@ import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 
 export default function index() {
-  const [pickedNumber, setPickedNumber] = useState(0);
+  const [pickedNumber, setPickedNumber] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
+  const [numberOfRounds, setNumberOfRounds] = useState(0);
+  const [guessRounds, setGuessRounds] = useState<number[]>([]);
   let screen = <StartGame setPickedNumber={setPickedNumber} />;
 
   const [fontsLoaded] = useFonts({
@@ -23,14 +25,41 @@ export default function index() {
     "open-sans-bold": require("../../assets/fonts/OpenSans-Bold.ttf"),
   });
 
-  if (pickedNumber > 0) {
+  const incrementNumberOfRounds = () => {
+    setNumberOfRounds((prev) => prev + 1);
+  };
+
+  const updateGuessRounds = (newGuess: number) => {
+    setGuessRounds((prev: number[]) => [...prev, newGuess]);
+  };
+
+  const restartGame = () => {
+    setGameOver(false);
+    setPickedNumber(null);
+    setNumberOfRounds(0);
+    setGuessRounds([]);
+  };
+
+  if (pickedNumber) {
     screen = (
-      <GameScreen chosenNumber={pickedNumber} setGameOver={setGameOver} />
+      <GameScreen
+        chosenNumber={pickedNumber}
+        setGameOver={setGameOver}
+        incrementNumberOfRounds={incrementNumberOfRounds}
+        updateGuessRounds={updateGuessRounds}
+        guessRounds={guessRounds}
+      />
     );
   }
 
-  if (gameOver && pickedNumber > 0) {
-    screen = <GameOver />;
+  if (gameOver && pickedNumber) {
+    screen = (
+      <GameOver
+        chosenNumber={pickedNumber}
+        numberOfRounds={numberOfRounds}
+        restartGame={restartGame}
+      />
+    );
   }
 
   if (!fontsLoaded) {

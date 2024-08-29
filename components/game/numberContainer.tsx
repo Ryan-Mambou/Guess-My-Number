@@ -3,7 +3,7 @@ import React from "react";
 import { Colors } from "../../constants/Colors";
 
 interface NumberContainerProps {
-  currentGuess: number;
+  currentGuess: number | null;
 }
 
 export default function NumberContainer({

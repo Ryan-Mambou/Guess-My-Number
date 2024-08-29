@@ -4,7 +4,17 @@ import Title from "@/components/ui/Title";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 
-export default function GameOver() {
+interface GameOverProps {
+  numberOfRounds: number;
+  chosenNumber: number;
+  restartGame: () => void;
+}
+
+export default function GameOver({
+  numberOfRounds,
+  chosenNumber,
+  restartGame,
+}: GameOverProps) {
   return (
     <View style={styles.container}>
       <Title title="Game Over!"></Title>
@@ -12,13 +22,11 @@ export default function GameOver() {
         <Image source={require("../../assets/images/success.png")} />
       </View>
       <Text style={styles.summaryText}>
-        Your phone needed <Text style={styles.highlight}>X</Text> rounds to
-        guess the number <Text style={styles.highlight}>Y</Text>.
+        Your phone needed <Text style={styles.highlight}>{numberOfRounds}</Text>{" "}
+        rounds to guess the number{" "}
+        <Text style={styles.highlight}>{chosenNumber}</Text>.
       </Text>
-      <PrimaryButton
-        text="Play Again"
-        onPress={() => console.log("Play Again")}
-      />
+      <PrimaryButton text="Play Again" onPress={restartGame} />
     </View>
   );
 }
