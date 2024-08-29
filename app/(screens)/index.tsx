@@ -10,11 +10,18 @@ import GameScreen from "./gameScreen";
 import GameOver from "./gameOver";
 import React, { useState } from "react";
 import { Colors } from "../../constants/Colors";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 export default function index() {
   const [pickedNumber, setPickedNumber] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   let screen = <StartGame setPickedNumber={setPickedNumber} />;
+
+  const [fontsLoaded] = useFonts({
+    "open-sans": require("../../assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("../../assets/fonts/OpenSans-Bold.ttf"),
+  });
 
   if (pickedNumber > 0) {
     screen = (
@@ -24,6 +31,10 @@ export default function index() {
 
   if (gameOver && pickedNumber > 0) {
     screen = <GameOver />;
+  }
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
   }
 
   return (

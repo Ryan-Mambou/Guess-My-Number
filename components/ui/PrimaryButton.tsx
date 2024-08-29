@@ -3,10 +3,10 @@ import { Colors } from "../../constants/Colors";
 
 interface PrimaryButtonProps {
   onPress: () => void;
-  text: string;
+  text: string | React.ReactElement;
 }
 
-function PrimaryButton({ text, onPress }: PrimaryButtonProps) {
+function PrimaryButton({ onPress, text }: PrimaryButtonProps) {
   return (
     <View style={styles.buttonOuterContainer}>
       <Pressable

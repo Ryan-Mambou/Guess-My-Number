@@ -17,7 +17,6 @@ export default function Title({ title }: TitleProps) {
 const styles = StyleSheet.create({
   titleContainer: {
     marginTop: 16,
-    // width: "90%",
     marginHorizontal: "auto",
     padding: 16,
     borderWidth: 2,
@@ -28,5 +27,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     textAlign: "center",
+    fontFamily: "open-sans",
   },
 });

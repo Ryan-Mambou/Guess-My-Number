@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import { Colors } from "../../constants/Colors";
 import Title from "@/components/ui/Title";
+import Card from "@/components/ui/Card";
+import InstructionText from "@/components/ui/InstructionText";
 
 interface StartGameProps {
   setPickedNumber: (number: number) => void;
@@ -34,8 +36,8 @@ export default function StartGame({ setPickedNumber }: StartGameProps) {
   return (
     <View style={styles.rootContainer}>
       <Title title="Guess the Number"></Title>
-      <View style={styles.inputContainer}>
-        <Text style={styles.instructionText}>Enter a Number</Text>
+      <Card>
+        <InstructionText text="Enter a Number"></InstructionText>
         <TextInput
           style={styles.numberInput}
           maxLength={2}
@@ -54,7 +56,7 @@ export default function StartGame({ setPickedNumber }: StartGameProps) {
             ></PrimaryButton>
           </View>
         </View>
-      </View>
+      </Card>
     </View>
   );
 }
@@ -67,27 +69,6 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 80,
-  },
-
-  inputContainer: {
-    padding: 16,
-    alignItems: "center",
-    marginVertical: 32,
-    marginHorizontal: "auto",
-    borderRadius: 8,
-    justifyContent: "center",
-    gap: 10,
-    width: "90%",
-    backgroundColor: Colors.primary800,
-    elevation: 5,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.25,
-  },
-  instructionText: {
-    color: Colors.accent500,
-    fontSize: 24,
   },
   numberInput: {
     color: Colors.accent500,

@@ -3,6 +3,9 @@ import React, { useState, useEffect, useMemo } from "react";
 import Title from "@/components/ui/Title";
 import NumberContainer from "@/components/game/numberContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import Card from "@/components/ui/Card";
+import InstructionText from "@/components/ui/InstructionText";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 function generateRandomNumber(min: number, max: number, exclude: number) {
   let randomNumber;
@@ -61,19 +64,26 @@ export default function GameScreen({
     <SafeAreaView style={styles.container}>
       <Title title="Guess the Number"></Title>
       <NumberContainer currentGuess={currentGuess} />
-      <View>
-        <Text>Higher or Lower?</Text>
-        <View>
-          <PrimaryButton
-            text="-"
-            onPress={() => handleGuess("lower")}
-          ></PrimaryButton>
-          <PrimaryButton
-            text="+"
-            onPress={() => handleGuess("higher")}
-          ></PrimaryButton>
+      <Card>
+        <InstructionText
+          text="Higher or Lower?"
+          style={styles.instructionText}
+        ></InstructionText>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              text={<Ionicons name="remove" size={24} color="white" />}
+              onPress={() => handleGuess("lower")}
+            ></PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              text={<Ionicons name="add" size={24} color="white" />}
+              onPress={() => handleGuess("higher")}
+            ></PrimaryButton>
+          </View>
         </View>
-      </View>
+      </Card>
       {/* <View>LOG ROUNDS</View> */}
     </SafeAreaView>
   );
@@ -86,5 +96,15 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
+  },
+  instructionText: {
+    marginBottom: 16,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  buttonContainer: {
+    flex: 1,
   },
 });
