@@ -17,7 +17,6 @@ export default function index() {
   const [pickedNumber, setPickedNumber] = useState<number | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [numberOfRounds, setNumberOfRounds] = useState(0);
-  const [guessRounds, setGuessRounds] = useState<number[]>([]);
   let screen = <StartGame setPickedNumber={setPickedNumber} />;
 
   const [fontsLoaded] = useFonts({
@@ -29,15 +28,10 @@ export default function index() {
     setNumberOfRounds((prev) => prev + 1);
   };
 
-  const updateGuessRounds = (newGuess: number) => {
-    setGuessRounds((prev: number[]) => [...prev, newGuess]);
-  };
-
   const restartGame = () => {
     setGameOver(false);
     setPickedNumber(null);
     setNumberOfRounds(0);
-    setGuessRounds([]);
   };
 
   if (pickedNumber) {
@@ -46,8 +40,6 @@ export default function index() {
         chosenNumber={pickedNumber}
         setGameOver={setGameOver}
         incrementNumberOfRounds={incrementNumberOfRounds}
-        updateGuessRounds={updateGuessRounds}
-        guessRounds={guessRounds}
       />
     );
   }

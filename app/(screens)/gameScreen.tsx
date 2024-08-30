@@ -1,11 +1,19 @@
-import { View, SafeAreaView, Text, StyleSheet, Alert } from "react-native";
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import {
+  View,
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  Alert,
+  FlatList,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import Title from "@/components/ui/Title";
 import NumberContainer from "@/components/game/numberContainer";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import Card from "@/components/ui/Card";
 import InstructionText from "@/components/ui/InstructionText";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import GuessLogItem from "@/components/game/guessLogItem";
 
 function generateRandomNumber(min: number, max: number, exclude: number) {
   let randomNumber;
@@ -18,10 +26,8 @@ function generateRandomNumber(min: number, max: number, exclude: number) {
 
 interface GameScreenProps {
   chosenNumber: number | null;
-  guessRounds: number[];
   setGameOver: (gameOver: boolean) => void;
   incrementNumberOfRounds: () => void;
-  updateGuessRounds: (newGuess: number) => void;
 }
 
 let minBoundary = 1;
@@ -29,14 +35,13 @@ let maxBoundary = 100;
 
 export default function GameScreen({
   chosenNumber,
-  guessRounds,
   setGameOver,
   incrementNumberOfRounds,
-  updateGuessRounds,
 }: GameScreenProps) {
   const initialGuess =
     chosenNumber && generateRandomNumber(1, 100, chosenNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [guessRounds, setGuessRounds] = useState<number[]>([initialGuess!]);
 
   useEffect(() => {
     if (currentGuess === chosenNumber) {
@@ -75,11 +80,8 @@ export default function GameScreen({
       generateRandomNumber(minBoundary, maxBoundary, chosenNumber);
     setCurrentGuess(newGuess);
     incrementNumberOfRounds();
-    updateGuessRounds(newGuess!);
+    setGuessRounds((prev: number[]) => [newGuess!, ...prev]);
   };
-
-  console.log("minBoudary ---> ", minBoundary);
-  console.log("maxBoudary ---> ", maxBoundary);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,9 +107,17 @@ export default function GameScreen({
           </View>
         </View>
       </Card>
-      <View>
-        {guessRounds.length > 0 &&
-          guessRounds.map((round) => <Text key={round}>{round}</Text>)}
+      <View style={styles.listContainer}>
+        <FlatList
+          data={guessRounds}
+          renderItem={({ item }) => (
+            <GuessLogItem
+              guess={guessRounds.indexOf(item) + 1}
+              opponentGuess={item}
+            />
+          )}
+          keyExtractor={(item) => item.toString()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -130,5 +140,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+  },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
 });
